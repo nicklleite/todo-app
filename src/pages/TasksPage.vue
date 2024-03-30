@@ -4,12 +4,10 @@
             <div class="row">
                 <div class="col-md-8 offset-md-2">
                     <!-- Add new Task -->
-                    <div class="relative">
-                        <input type="text" class="form-control form-control-lg padding-right-lg" placeholder="+ Add new task. Press enter to save." />
-                    </div>
+                    <NewTask @added="handleAddedTask" />
 
                     <!-- List uncompleted of tasks -->
-                    <Tasks :tasks="uncompletedTasks" />
+                    <Tasks :tasks="uncompletedTasks" @updated="handleUpdatedTask" @completed="handleCompletedTask" />
 
                     <!-- Toggle Button -->
                     <div class="text-center my-3" v-show="showToggleCompletedBtn">
@@ -29,8 +27,9 @@
 
 <script setup>
 import { onMounted, ref, computed } from "vue";
-import { allTasks } from "../http/task-api";
+import { allTasks, createTask, updateTask, completeTask } from "../http/task-api";
 import Tasks from "../components/tasks/Tasks.vue";
+import NewTask from "../components/tasks/NewTask.vue";
 
 const tasks = ref([]);
 
@@ -48,4 +47,27 @@ const showToggleCompletedBtn = computed(() => completedTasks.value.length > 0 &&
 const completedTasksIsVisible = computed(() => uncompletedTasks.value.length === 0 || completedTasks.value.length > 0);
 
 const showCompletedTasks = ref(false);
+
+const handleAddedTask = async (newTask) => {
+    const { data: createdTask } = await createTask(newTask);
+    tasks.value.unshift(createdTask.data);
+};
+
+const handleUpdatedTask = async (task) => {
+    const { data: updatedTask } = await updateTask(task, {
+        name: task.name,
+    });
+
+    const currentTask = tasks.value.find((item) => item.id === task.id);
+    currentTask.name = updatedTask.data.name;
+};
+
+const handleCompletedTask = async (task) => {
+    const { data: updatedTask } = await completeTask(task.id, {
+        is_completed: task.is_completed,
+    });
+
+    const currentTask = tasks.value.find((item) => item.id === task.id);
+    currentTask.is_completed = updatedTask.data.is_completed;
+};
 </script>
