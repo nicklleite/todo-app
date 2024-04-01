@@ -7,18 +7,21 @@
                     <NewTask @added="handleAddedTask" />
 
                     <!-- List uncompleted of tasks -->
-                    <Tasks :tasks="uncompletedTasks" @updated="handleUpdatedTask" @completed="handleCompletedTask" @removed="handleRemovedTask" />
+                    <Tasks :tasks="uncompletedTasks" @updated="handleUpdatedTask" @completed="handleCompletedTask"
+                        @removed="handleRemovedTask" />
 
                     <!-- Toggle Button -->
                     <div class="text-center my-3" v-show="showToggleCompletedBtn">
-                        <button class="btn btn-sm btn-secondary" @click="($event) => (showCompletedTasks = !showCompletedTasks)">
+                        <button class="btn btn-sm btn-secondary"
+                            @click="($event) => (showCompletedTasks = !showCompletedTasks)">
                             <span v-if="!showCompletedTasks">Show Completed Tasks</span>
                             <span v-else>Hide Completed Tasks</span>
                         </button>
                     </div>
 
                     <!-- List completed of tasks -->
-                    <Tasks :tasks="completedTasks" :show="completedTasksIsVisible && showCompletedTasks" @updated="handleUpdatedTask" @completed="handleCompletedTask" @removed="handleRemovedTask" />
+                    <Tasks :tasks="completedTasks" :show="completedTasksIsVisible && showCompletedTasks"
+                        @updated="handleUpdatedTask" @completed="handleCompletedTask" @removed="handleRemovedTask" />
                 </div>
             </div>
         </div>
@@ -27,15 +30,20 @@
 
 <script setup>
 import { onMounted, ref, computed } from "vue";
+import { useTaskStore } from "../stores/task";
 import { allTasks, createTask, updateTask, completeTask, removeTask } from "../http/task-api";
 import Tasks from "../components/tasks/Tasks.vue";
 import NewTask from "../components/tasks/NewTask.vue";
 
-const tasks = ref([]);
+const store = useTaskStore()
+
+const tasks = ref([])
 
 onMounted(async () => {
     const { data } = await allTasks();
     tasks.value = data?.data;
+
+    console.log(store.task)
 });
 
 const uncompletedTasks = computed(() => tasks.value.filter((task) => !task.is_completed));
