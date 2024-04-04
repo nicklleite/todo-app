@@ -1,6 +1,7 @@
 <template>
     <main style="min-height: 50vh; margin-top: 2rem">
         <div class="container">
+            <h1>Tasks</h1>
             <div class="row">
                 <div class="col-md-8 offset-md-2">
                     <!-- Add new Task -->
