@@ -1,10 +1,10 @@
 <template>
     <nav class="navbar navbar-expand-lg navbar-light bg-light border-bottom">
         <div class="container py-2">
-            <a href="#" class="navbar-brand">
+            <router-link :to="{ name: 'home' }" class="navbar-brand">
                 <span>Todo</span>
                 <strong>App</strong>
-            </a>
+            </router-link>
             <button
                 class="navbar-toggler"
                 type="button"
