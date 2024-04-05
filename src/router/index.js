@@ -8,16 +8,6 @@ const router = createRouter({
 });
 
 router.beforeEach((to, from) => {
-    // console.log("Global befor each:", to, from);
-
-    // canceling a navigation
-    // return false
-
-    // redirecting to a location
-    // if (to.path === "/tasks") {
-    //     return { name: "login" };
-    // }
-
     if (to.meta.auth) {
         return {
             name: 'login',
